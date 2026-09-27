@@ -1,0 +1,939 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --purple: #6d28d9;
+  --purple-2: #9333ea;
+  --purple-3: #a855f7;
+  --purple-dark: #24103f;
+  --white: #ffffff;
+  --muted: rgba(255,255,255,.72);
+  --glass: rgba(255,255,255,.105);
+  --glass-hover: rgba(255,255,255,.16);
+  --border: rgba(255,255,255,.18);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Cairo", Tahoma, Arial, sans-serif;
+  color: #fff;
+  overflow-x: hidden;
+
+  /* الخلفية البنفسجية الأساسية */
+  background:
+    radial-gradient(circle at 15% 20%, rgba(190,120,255,.20), transparent 25%),
+    radial-gradient(circle at 85% 75%, rgba(132,70,255,.18), transparent 28%),
+    linear-gradient(135deg, #32106f 0%, #4b16a1 42%, #6721bd 72%, #351074 100%);
+  position: relative;
+}
+
+/* طبقة الأنيميشن الرئيسية */
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  pointer-events: none;
+  z-index: -1;
+  border-radius: 50%;
+  filter: blur(10px);
+}
+
+/* كرة ضوئية بنفسجية فاتحة تتحرك بهدوء */
+body::before {
+  width: 430px;
+  height: 430px;
+  top: -150px;
+  right: -110px;
+  background: radial-gradient(
+    circle,
+    rgba(218,166,255,.22) 0%,
+    rgba(177,92,255,.12) 35%,
+    transparent 70%
+  );
+  animation: floatingGlowOne 13s ease-in-out infinite alternate;
+}
+
+/* كرة ضوئية ثانية */
+body::after {
+  width: 500px;
+  height: 500px;
+  bottom: -210px;
+  left: -160px;
+  background: radial-gradient(
+    circle,
+    rgba(191,130,255,.17) 0%,
+    rgba(126,60,220,.10) 38%,
+    transparent 72%
+  );
+  animation: floatingGlowTwo 16s ease-in-out infinite alternate;
+}
+
+/* خطوط/نقاط خفيفة جدًا في الخلفية */
+body {
+  background-image:
+    radial-gradient(rgba(255,255,255,.065) 1px, transparent 1px),
+    radial-gradient(circle at 15% 20%, rgba(190,120,255,.20), transparent 25%),
+    radial-gradient(circle at 85% 75%, rgba(132,70,255,.18), transparent 28%),
+    linear-gradient(135deg, #32106f 0%, #4b16a1 42%, #6721bd 72%, #351074 100%);
+  background-size: 32px 32px, auto, auto, auto;
+}
+
+button,
+a {
+  font: inherit;
+}
+
+/* =========================
+   شاشة التحميل
+========================= */
+
+.loader-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+
+  background:
+    radial-gradient(circle at center, rgba(181,107,255,.16), transparent 34%),
+    linear-gradient(135deg, #2e0b63, #50159d 55%, #351075);
+  transition: opacity .7s ease, visibility .7s ease;
+}
+
+/* إضاءة متحركة خلف شاشة التحميل */
+.loader-screen::before {
+  content: "";
+  position: absolute;
+  width: 480px;
+  height: 480px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(214,165,255,.18), transparent 68%);
+  animation: loaderGlow 5s ease-in-out infinite alternate;
+}
+
+.loader-screen.hide {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.loader-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  animation: loaderIn .9s ease both;
+}
+
+.loader-logo {
+  width: min(300px, 70vw);
+  height: auto;
+  filter:
+    drop-shadow(0 20px 35px rgba(0,0,0,.28))
+    drop-shadow(0 0 25px rgba(190,115,255,.20));
+}
+
+.loader-content p {
+  margin: 0;
+  color: rgba(255,255,255,.75);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.loader-spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid rgba(255,255,255,.16);
+  border-top-color: #d7a5ff;
+  border-right-color: #a855f7;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* =========================
+   الموقع
+========================= */
+
+.site {
+  position: relative;
+  width: min(1040px, calc(100% - 34px));
+  margin: 0 auto;
+  padding: 30px 0 28px;
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity .85s ease, transform .85s ease;
+}
+
+.site.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* لمعة خفيفة تتحرك في الصفحة */
+.site::before {
+  content: "";
+  position: fixed;
+  width: 250px;
+  height: 250px;
+  left: 5%;
+  top: 45%;
+  border-radius: 50%;
+  background: rgba(210,160,255,.08);
+  filter: blur(70px);
+  pointer-events: none;
+  animation: pageGlow 11s ease-in-out infinite alternate;
+  z-index: -1;
+}
+
+/* =========================
+   اللوجو والهيدر
+========================= */
+
+.hero {
+  position: relative;
+  text-align: center;
+  padding: 8px 0 34px;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  width: 280px;
+  height: 170px;
+  top: -25px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(220,174,255,.15),
+    transparent 70%
+  );
+  filter: blur(8px);
+  animation: logoGlow 6s ease-in-out infinite alternate;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.main-logo {
+  display: block;
+  width: min(285px, 66vw);
+  margin: 0 auto 13px;
+  filter:
+    drop-shadow(0 18px 27px rgba(0,0,0,.30))
+    drop-shadow(0 0 22px rgba(197,126,255,.15));
+  transition: transform .35s ease, filter .35s ease;
+}
+
+.main-logo:hover {
+  transform: translateY(-4px);
+  filter:
+    drop-shadow(0 23px 32px rgba(0,0,0,.34))
+    drop-shadow(0 0 28px rgba(210,150,255,.22));
+}
+
+.hero h1 {
+  margin: 0;
+  font-size: clamp(24px, 4vw, 38px);
+  font-weight: 800;
+  letter-spacing: -.6px;
+  color: #fff;
+  text-shadow: 0 4px 18px rgba(0,0,0,.20);
+}
+
+.hero p {
+  margin: 2px 0 0;
+  color: #e4c9ff;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: .4px;
+}
+
+.hero-line {
+  display: block;
+  width: 105px;
+  height: 4px;
+  margin: 13px auto 0;
+  border-radius: 99px;
+  background: linear-gradient(90deg, #b56aff, #ead2ff, #a855f7);
+  box-shadow: 0 4px 18px rgba(195,120,255,.35);
+}
+
+/* =========================
+   كروت التواصل
+========================= */
+
+.links-grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.link-card {
+  position: relative;
+  min-height: 82px;
+  padding: 13px 16px;
+  border: 1px solid var(--border);
+  border-radius: 22px;
+
+  /* زجاج بنفسجي شفاف */
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,255,255,.145),
+      rgba(255,255,255,.065)
+    );
+
+  box-shadow:
+    0 15px 35px rgba(15, 3, 35, .18),
+    inset 0 1px 0 rgba(255,255,255,.12);
+
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-decoration: none;
+  color: #fff;
+  transition:
+    transform .28s cubic-bezier(.2,.8,.2,1),
+    box-shadow .28s ease,
+    border-color .28s ease,
+    background .28s ease;
+
+  cursor: pointer;
+  overflow: hidden;
+  backdrop-filter: blur(13px);
+  -webkit-backdrop-filter: blur(13px);
+}
+
+/* خط إضاءة جانبي */
+.link-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 4px;
+  border-radius: 0 22px 22px 0;
+  background: linear-gradient(180deg, #d7a7ff, #8b3de7);
+  opacity: .45;
+  transition: opacity .25s ease, width .25s ease;
+}
+
+/* لمعة تمر داخل الكارت */
+.link-card::after {
+  content: "";
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  top: -110px;
+  left: -110px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(229,194,255,.12), transparent 70%);
+  transition: transform .5s ease;
+  pointer-events: none;
+}
+
+.link-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(226,196,255,.34);
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,255,255,.19),
+      rgba(255,255,255,.085)
+    );
+  box-shadow:
+    0 20px 45px rgba(12, 2, 30, .24),
+    0 0 22px rgba(169,92,255,.08),
+    inset 0 1px 0 rgba(255,255,255,.18);
+}
+
+.link-card:hover::before {
+  opacity: .9;
+  width: 5px;
+}
+
+.link-card:hover::after {
+  transform: translate(85px, 85px);
+}
+
+.link-card:active {
+  transform: translateY(-1px) scale(.985);
+}
+
+.link-card > span:nth-child(2) {
+  flex: 1;
+  min-width: 0;
+  text-align: right;
+}
+
+.link-card strong {
+  display: block;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 800;
+  text-shadow: 0 2px 9px rgba(0,0,0,.15);
+}
+
+.link-card small {
+  display: block;
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.link-card > b {
+  color: #d7adff;
+  font-size: 19px;
+  transition: transform .25s ease, color .25s ease;
+}
+
+.link-card:hover > b {
+  transform: translateX(-5px);
+  color: #f0ddff;
+}
+
+/* =========================
+   الأيقونات
+   الشكل والحجم محفوظان كما هما
+========================= */
+
+.app-icon {
+  width: 50px;
+  height: 50px;
+  flex: 0 0 50px;
+  display: grid;
+  place-items: center;
+  border-radius: 15px;
+  background: rgba(255,255,255,.90);
+  box-shadow:
+    0 6px 16px rgba(15,3,35,.16),
+    inset 0 0 0 1px rgba(255,255,255,.5);
+}
+
+.app-icon img {
+  width: 29px;
+  height: 29px;
+  object-fit: contain;
+}
+
+/* =========================
+   الكارت المميز
+========================= */
+
+.featured {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,255,255,.18),
+      rgba(184,112,255,.10)
+    );
+  border-color: rgba(226,196,255,.25);
+}
+
+/* =========================
+   زر Telegram
+========================= */
+
+.card-button {
+  border: 1px solid var(--border);
+  text-align: inherit;
+  width: 100%;
+}
+
+/* =========================
+   Footer
+========================= */
+
+footer {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+  padding: 30px 8px 6px;
+  color: rgba(255,255,255,.55);
+  font-size: 12px;
+}
+
+footer::before {
+  content: "";
+  width: 120px;
+  height: 1px;
+  display: block;
+  position: absolute;
+  margin-top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(224,190,255,.45),
+    transparent
+  );
+}
+
+/* =========================
+   نافذة Telegram
+========================= */
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(18,4,35,.64);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .28s ease, visibility .28s ease;
+}
+
+.modal.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-box {
+  position: relative;
+  width: min(440px, 100%);
+  padding: 34px 25px 27px;
+  border: 1px solid rgba(255,255,255,.25);
+  border-radius: 30px;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(83,25,150,.97),
+      rgba(48,12,101,.98)
+    );
+  text-align: center;
+  box-shadow:
+    0 30px 90px rgba(0,0,0,.38),
+    inset 0 1px 0 rgba(255,255,255,.12);
+  transform: translateY(18px) scale(.96);
+  transition: transform .28s cubic-bezier(.2,.8,.2,1);
+}
+
+.modal.open .modal-box {
+  transform: translateY(0) scale(1);
+}
+
+.close {
+  position: absolute;
+  top: 12px;
+  left: 13px;
+  border: 0;
+  background: rgba(255,255,255,.12);
+  color: #fff;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 25px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background .2s ease, transform .2s ease;
+}
+
+.close:hover {
+  background: rgba(255,255,255,.20);
+  transform: rotate(90deg);
+}
+
+.modal-icon {
+  width: 55px;
+  height: 55px;
+  margin-bottom: 8px;
+}
+
+.modal-box h2 {
+  margin: 0;
+  color: #fff;
+  font-size: 25px;
+  font-weight: 800;
+}
+
+.modal-box p {
+  color: rgba(255,255,255,.70);
+  margin: 5px 0 21px;
+  font-size: 13px;
+}
+
+.telegram-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 11px;
+}
+
+.telegram-actions a {
+  padding: 14px 10px;
+  border-radius: 16px;
+  background: rgba(255,255,255,.11);
+  color: #fff;
+  text-decoration: none;
+  font-weight: 800;
+  border: 1px solid rgba(255,255,255,.17);
+  box-shadow: 0 8px 20px rgba(0,0,0,.13);
+  transition: transform .2s ease, background .2s ease;
+}
+
+.telegram-actions a:hover {
+  transform: translateY(-2px);
+  background: rgba(255,255,255,.18);
+}
+
+/* =========================
+   Animations
+========================= */
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes loaderIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px) scale(.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes floatingGlowOne {
+  0% {
+    transform: translate3d(0,0,0) scale(1);
+  }
+  50% {
+    transform: translate3d(-45px,45px,0) scale(1.08);
+  }
+  100% {
+    transform: translate3d(-15px,85px,0) scale(.94);
+  }
+}
+
+@keyframes floatingGlowTwo {
+  0% {
+    transform: translate3d(0,0,0) scale(1);
+  }
+  50% {
+    transform: translate3d(55px,-40px,0) scale(1.07);
+  }
+  100% {
+    transform: translate3d(10px,-75px,0) scale(.95);
+  }
+}
+
+@keyframes loaderGlow {
+  0% {
+    transform: scale(.85);
+    opacity: .55;
+  }
+  100% {
+    transform: scale(1.15);
+    opacity: 1;
+  }
+}
+
+@keyframes logoGlow {
+  0% {
+    transform: translateX(-50%) scale(.88);
+    opacity: .45;
+  }
+  100% {
+    transform: translateX(-50%) scale(1.08);
+    opacity: .9;
+  }
+}
+
+@keyframes pageGlow {
+  0% {
+    transform: translate(0,0);
+    opacity: .45;
+  }
+  100% {
+    transform: translate(70px,-35px);
+    opacity: .9;
+  }
+}
+
+/* =========================
+   Mobile
+========================= */
+
+@media (max-width: 650px) {
+  .site {
+    width: min(100% - 18px, 540px);
+    padding-top: 20px;
+  }
+
+  .hero {
+    padding-bottom: 24px;
+  }
+
+  .main-logo {
+    width: min(250px, 68vw);
+  }
+
+  .hero h1 {
+    font-size: clamp(22px, 7vw, 30px);
+  }
+
+  .hero p {
+    font-size: 16px;
+  }
+
+  .links-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .link-card {
+    min-height: 76px;
+    border-radius: 19px;
+    padding: 12px 14px;
+  }
+}
+
+@media (max-width: 380px) {
+  .site {
+    width: calc(100% - 14px);
+  }
+
+  .link-card {
+    gap: 10px;
+    padding-inline: 11px;
+  }
+
+  .link-card strong {
+    font-size: 15px;
+  }
+
+  .link-card small {
+    font-size: 11px;
+  }
+}
+
+/* =========================
+   قواعد الأيقونات الأصلية
+   محفوظة بدون تغيير
+========================= */
+
+.app-icon.instagram i {
+  background: linear-gradient(
+    45deg,
+    #feda75,
+    #fa7e1e,
+    #d62976,
+    #962fbf,
+    #4f5bd5
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.app-icon i {
+  font-size: 29px;
+  line-height: 1;
+}
+
+.app-icon.tiktok i {
+  color: #000;
+  filter:
+    drop-shadow(-2px -1px 0 #25f4ee)
+    drop-shadow(2px 1px 0 #fe2c55);
+}
+
+.app-icon.messenger i {
+  color: #0084ff;
+  background: linear-gradient(
+    135deg,
+    #00c6ff 0%,
+    #0084ff 45%,
+    #7b2cff 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.app-icon.facebook i {
+  color: #1877f2;
+}
+
+.app-icon.google-maps i {
+  color: #ea4335;
+  filter:
+    drop-shadow(1px 0 0 #4285f4)
+    drop-shadow(-1px 1px 0 #34a853);
+}
+
+.app-icon.gmail {
+  width: 50px;
+  height: 50px;
+  flex: 0 0 50px;
+}
+
+.app-icon.gmail .gmail-icon {
+  width: 29px;
+  height: 29px;
+  display: block;
+}
+
+.app-icon.phone i {
+  color: #15ff07;
+}
+
+.app-icon.threads i {
+  color: #000;
+}
+
+.app-icon.whatsapp i {
+  color: #25d366;
+}
+
+.app-icon.telegram i {
+  color: #229ed9;
+}
+
+.app-icon.snapchat i {
+  color: #fffc00;
+  -webkit-text-stroke: 2px #000;
+  paint-order: stroke fill;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
+
+/* =========================================================
+   Diamond Host - final visual polish
+   الروابط والأيقونات لا يتم تعديلها هنا
+   ========================================================= */
+
+/* جعل اللوجو دائريًا مع الحفاظ على الصورة نفسها */
+.main-logo,
+.loader-logo {
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 50%;
+  clip-path: circle(50% at 50% 50%);
+  background: #fff;
+  padding: 4px;
+  box-shadow:
+    0 18px 35px rgba(20, 4, 45, .28),
+    0 0 0 2px rgba(255,255,255,.22),
+    0 0 32px rgba(206, 151, 255, .18);
+}
+
+.main-logo {
+  width: min(285px, 66vw);
+  margin-bottom: 16px;
+}
+
+.loader-logo {
+  width: min(300px, 70vw);
+  height: min(300px, 70vw);
+  padding: 5px;
+}
+
+.main-logo:hover {
+  transform: translateY(-4px) scale(1.015);
+  box-shadow:
+    0 23px 40px rgba(20, 4, 45, .32),
+    0 0 0 2px rgba(255,255,255,.28),
+    0 0 38px rgba(206, 151, 255, .24);
+}
+
+/* تأكيد الخلفية البنفسجية وعدم رجوع أي خلفية بيضاء */
+body {
+  color: #fff;
+  background:
+    radial-gradient(circle at 15% 20%, rgba(190,120,255,.20), transparent 25%),
+    radial-gradient(circle at 85% 75%, rgba(132,70,255,.18), transparent 28%),
+    radial-gradient(circle at 50% 110%, rgba(220,170,255,.10), transparent 35%),
+    linear-gradient(135deg, #32106f 0%, #4b16a1 42%, #6721bd 72%, #351074 100%);
+  position: relative;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  width: 430px;
+  height: 430px;
+  left: -150px;
+  bottom: -190px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: -1;
+  background: radial-gradient(circle, rgba(216,164,255,.17), transparent 70%);
+  filter: blur(12px);
+  animation: diamondFloat 16s ease-in-out infinite alternate;
+}
+
+.loader-screen {
+  background:
+    radial-gradient(circle at 50% 38%, rgba(218,166,255,.20), transparent 34%),
+    linear-gradient(135deg, #2e0b63 0%, #50159d 55%, #351075 100%);
+}
+
+.loader-screen::after {
+  content: "";
+  position: absolute;
+  width: 520px;
+  height: 520px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(224,180,255,.16), transparent 68%);
+  animation: loaderOrb 6s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+.loader-content { z-index: 2; }
+
+@keyframes diamondFloat {
+  0% { transform: translate3d(0,0,0) scale(1); }
+  50% { transform: translate3d(55px,-35px,0) scale(1.06); }
+  100% { transform: translate3d(15px,-75px,0) scale(.95); }
+}
+
+@keyframes loaderOrb {
+  from { transform: scale(.82); opacity: .45; }
+  to { transform: scale(1.12); opacity: .95; }
+}
+
+@media (max-width: 650px) {
+  .main-logo {
+    width: min(250px, 68vw);
+  }
+  .loader-logo {
+    width: min(270px, 70vw);
+    height: min(270px, 70vw);
+  }
+}
